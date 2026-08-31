@@ -1,0 +1,1 @@
+import{c as n}from"./DCADjnpI.js";import{e as a,o,c as t,n as r,h as l}from"./BDfrtKDQ.js";const i=a({__name:"Skeleton",props:{class:{type:[Boolean,null,String,Object,Array]}},setup(e){const s=e;return(c,m)=>(o(),t("div",{"data-slot":"skeleton",class:r(l(n)("bg-muted rounded-md animate-pulse",s.class))},null,2))}});export{i as _};

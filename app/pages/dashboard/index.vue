@@ -14,11 +14,6 @@
         <template v-else>
           <p class="text-sm sm:text-base text-gray-500 dark:text-white mt-1">
             Welcome back, {{ user?.user_metadata.full_name }}
-            <span
-              class="inline-block transition-all animate-ping delay-180 duration-300 ease-in-out"
-            >
-              👋
-            </span>
           </p>
         </template>
       </div>
