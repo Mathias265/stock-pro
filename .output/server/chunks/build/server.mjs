@@ -638,7 +638,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import('./index-BIYuFeoH.mjs')
+    component: () => import('./index-UnIBctb7.mjs')
   },
   {
     name: "inventory",
@@ -650,7 +650,7 @@ const _routes = [
     name: "marketplace",
     path: "/marketplace",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-BkHVOrm7.mjs')
+    component: () => import('./index-INhL1QLI.mjs')
   },
   {
     name: "products",
@@ -1735,7 +1735,7 @@ const plugins = [
 ];
 const layouts = {
   default: defineAsyncComponent(() => import('./default-X2IZVJnD.mjs').then((m) => m.default || m)),
-  home: defineAsyncComponent(() => import('./home-BhJl1uD9.mjs').then((m) => m.default || m))
+  home: defineAsyncComponent(() => import('./home-CHikE1hd.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({

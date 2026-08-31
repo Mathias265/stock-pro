@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppSidebar from "@/components/AppSidebar.vue";
+import AppSidebar from "@/components/AppSideBar.vue";
 import { Icon } from "@iconify/vue";
 import { Button } from "@/components/ui/button";
 import {

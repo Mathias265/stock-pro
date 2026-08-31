@@ -1,1 +1,0 @@
-import{c as o}from"./DCADjnpI.js";import{e as r,o as a,c as n,n as c,h as l,H as p}from"./BDfrtKDQ.js";const u=r({__name:"CardDescription",props:{class:{type:[Boolean,null,String,Object,Array]}},setup(e){const s=e;return(t,i)=>(a(),n("div",{"data-slot":"card-description",class:c(l(o)("text-muted-foreground text-sm",s.class))},[p(t.$slots,"default")],2))}});export{u as _};
