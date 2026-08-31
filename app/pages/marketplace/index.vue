@@ -375,7 +375,7 @@
       </TabsContent>
     </Tabs>
 
-    <MarketplaceActionModal
+    <Marketplace
       :is-open="isModalOpen"
       :listing="selectedListing"
       @close="isModalOpen = false"
@@ -395,7 +395,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import MarketplaceActionModal from "@/components/marketplace/MarketplaceActionModal.vue";
+//import MarketPlaceActionModal from "@/components/marketplace/MarketPlaceActionModal.vue";
 import { Skeleton } from "@/components/ui/skeleton";
 import { MapPin, Star, X, Bus } from "lucide-vue-next";
 import { TriangleAlert } from "lucide-vue-next";

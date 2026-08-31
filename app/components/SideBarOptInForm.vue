@@ -121,7 +121,7 @@ onMounted(() => {
         if (!record || !record.id) return;
 
         try {
-          // 💡 FIXED: Instantly queries our database view to resolve the explicit text names
+          //  Instantly queries our database view to resolve the explicit text names
           const { data, error } = await supabase
             .from("extended_marketplace_requests")
             .select("item_name, quantity, status")

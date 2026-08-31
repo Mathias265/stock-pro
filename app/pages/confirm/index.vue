@@ -43,7 +43,7 @@ const supabase = useDb();
 const route = useRoute();
 
 onMounted(async () => {
-  // 💡 FIXED: If arriving via the manual testing fallback link, activate the user immediately!
+ 
   if (route.query.email) {
     console.log(
       "Arrived via manual presentation bypass link for:",
