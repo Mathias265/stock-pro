@@ -5,6 +5,7 @@ import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, 
 import { debounce } from 'perfect-debounce';
 import { isPlainObject } from '@vue/shared';
 import { createClient } from '@supabase/supabase-js';
+import WebSocket from 'ws';
 import { ssrRenderSuspense, ssrRenderComponent, ssrRenderVNode, ssrRenderAttrs } from 'vue/server-renderer';
 import { Toaster } from 'vue-sonner';
 import 'node:http';
@@ -621,77 +622,77 @@ const _routes = [
   {
     name: "auth-signup",
     path: "/auth/signup",
-    component: () => import('./signup-CzHEIz5w.mjs')
+    component: () => import('./signup-B8GySiB9.mjs')
   },
   {
     name: "marketplace-chat",
     path: "/marketplace/chat",
     meta: __nuxt_page_meta$9 || {},
-    component: () => import('./chat-t4yZfG0N.mjs')
+    component: () => import('./chat-DlOkL4lY.mjs')
   },
   {
     name: "confirm",
     path: "/confirm",
-    component: () => import('./index-BBT5JzTY.mjs')
+    component: () => import('./index-DbvCY-N5.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import('./index-UnIBctb7.mjs')
+    component: () => import('./index-DnIPg31_.mjs')
   },
   {
     name: "inventory",
     path: "/inventory",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-D9cSup_R.mjs')
+    component: () => import('./index-BiViv7O4.mjs')
   },
   {
     name: "marketplace",
     path: "/marketplace",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-INhL1QLI.mjs')
+    component: () => import('./index-DHtiLrNK.mjs')
   },
   {
     name: "products",
     path: "/products",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-B1bQPuN6.mjs')
+    component: () => import('./index-B08Jh6GE.mjs')
   },
   {
     name: "report",
     path: "/report",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-CbW6H0J5.mjs')
+    component: () => import('./index-DKnh8_Gx.mjs')
   },
   {
     name: "sales",
     path: "/sales",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-B951QLbR.mjs')
+    component: () => import('./index-DRpm8Sqc.mjs')
   },
   {
     name: "setting",
     path: "/setting",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-Blpfvl7q.mjs')
+    component: () => import('./index-Cup6qyOW.mjs')
   },
   {
     name: "supplier",
     path: "/supplier",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DUhu66m4.mjs')
+    component: () => import('./index-CXM_0MOx.mjs')
   },
   {
     name: "users",
     path: "/users",
     meta: __nuxt_page_meta || {},
-    component: () => import('./index-DPHX2AqK.mjs')
+    component: () => import('./index-p3rvjNAf.mjs')
   },
   {
     name: "index",
     path: "/",
-    component: () => import('./index-C5VgxL8f.mjs')
+    component: () => import('./index-DSJsNcCw.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1377,13 +1378,12 @@ const useDb = () => {
   if (!client) {
     const config = /* @__PURE__ */ useRuntimeConfig();
     {
-      const ws = require("ws");
       client = createClient(
         config.public.supabaseUrl,
         config.public.supabaseAnonKey,
         {
           realtime: {
-            transport: ws
+            transport: WebSocket
           }
         }
       );
@@ -1735,7 +1735,7 @@ const plugins = [
 ];
 const layouts = {
   default: defineAsyncComponent(() => import('./default-X2IZVJnD.mjs').then((m) => m.default || m)),
-  home: defineAsyncComponent(() => import('./home-CHikE1hd.mjs').then((m) => m.default || m))
+  home: defineAsyncComponent(() => import('./home-rIRKuxuM.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({
@@ -2022,8 +2022,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-DJYDUPWU.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-CA64wvXm.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-DvzL8A3f.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-sDdfLMhO.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));

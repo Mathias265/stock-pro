@@ -104,7 +104,7 @@
             </div>
           </div>
 
-          <!-- Row 3: Stock Volume & Image URL Path Link -->
+          <!-- Row 3: Stock Volume & Image Drop Zone -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="space-y-1">
               <label
@@ -124,18 +124,59 @@
             <div class="space-y-1">
               <label
                 class="text-xs font-semibold text-gray-500 uppercase tracking-wider"
-                >Image URL Link</label
+                >Product Image</label
               >
-              <input
-                v-model="form.image_url"
-                type="url"
-                class="w-full px-3 py-2 border rounded-lg text-sm bg-background"
-                placeholder="https://images.unsplash.com..."
-              />
+
+              <div
+                class="relative flex items-center justify-center h-[38px] min-h-[38px] border border-dashed rounded-lg text-sm cursor-pointer transition-colors overflow-hidden"
+                :class="
+                  isDragging
+                    ? 'border-primary bg-primary/5'
+                    : 'border-gray-300 dark:border-gray-700 hover:border-primary'
+                "
+                @dragover.prevent="isDragging = true"
+                @dragleave.prevent="isDragging = false"
+                @drop.prevent="onDrop"
+                @click="fileInput?.click()"
+              >
+                <span
+                  v-if="!imageFile"
+                  class="text-xs text-gray-400 px-2 truncate"
+                >
+                  Drop image or click to browse
+                </span>
+                <span v-else class="text-xs px-2 truncate">{{
+                  imageFile.name
+                }}</span>
+
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  @change="onFileChange"
+                />
+              </div>
             </div>
           </div>
 
-          <!-- Row 4: Text Description Block (Exposing missing description column) -->
+          <!-- Image Preview -->
+          <div v-if="imagePreview" class="relative w-24 h-24">
+            <img
+              :src="imagePreview"
+              alt="Preview"
+              class="w-24 h-24 object-cover rounded-lg border"
+            />
+            <button
+              type="button"
+              @click="clearImage"
+              class="absolute -right-2 -top-2 bg-background border rounded-full p-0.5 text-gray-500 hover:text-red-500"
+            >
+              <X class="w-4 h-4" />
+            </button>
+          </div>
+
+          <!-- Row 4: Text Description Block -->
           <div class="space-y-1">
             <label
               class="text-xs font-semibold text-gray-500 uppercase tracking-wider"
@@ -151,7 +192,6 @@
           </div>
 
           <!-- MARKETPLACE TOGGLE SWITCH BLOCK -->
-
           <div
             class="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 space-y-4"
           >
@@ -223,18 +263,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
 import { X } from "lucide-vue-next";
 import { Button } from "@/components/ui/button";
 import { toast } from "vue-sonner";
-// 1. FIXED: Point props tracking strictly using TypeScript compiler definitions
+
 const props = defineProps<{
   isOpen: boolean;
 }>();
@@ -248,55 +287,104 @@ const closeModal = () => {
 const supabase = useDb();
 const submitting = ref(false);
 const { user } = useAuth();
+
 // Dropdown data collection holders
 const categoriesList = ref<any[]>([]);
 const suppliersList = ref<any[]>([]);
 
-// 2. FIXED: Expanded reactive object mapping out all explicit table columns
 const form = ref({
   name: "",
   category_id: "",
   supplier_id: "",
   price: 0,
   quantity: 0,
-  image_url: "",
   description: "",
   list_externally: false,
   wholesale_price: 0,
   wholesale_qty: 0,
 });
 
-// 3. NEW: Load dropdown items immediately when the modal hits the page tree
+// ---------- Image upload state ----------
+const fileInput = ref<HTMLInputElement | null>(null);
+const imageFile = ref<File | null>(null);
+const imagePreview = ref<string | null>(null);
+const isDragging = ref(false);
+
+const MAX_SIZE_MB = 5;
+const DEFAULT_IMAGE = "https://placehold.co/400x400?text=No+Image";
+
+const setImage = (file: File | undefined) => {
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    toast.error("Please select an image file.");
+    return;
+  }
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    toast.error(`Image must be under ${MAX_SIZE_MB}MB.`);
+    return;
+  }
+  if (imagePreview.value) URL.revokeObjectURL(imagePreview.value);
+  imageFile.value = file;
+  imagePreview.value = URL.createObjectURL(file);
+};
+
+const onDrop = (e: DragEvent) => {
+  isDragging.value = false;
+  setImage(e.dataTransfer?.files?.[0]);
+};
+
+const onFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  setImage(target.files?.[0]);
+  target.value = ""; // allows re-selecting the same file
+};
+
+const clearImage = () => {
+  if (imagePreview.value) URL.revokeObjectURL(imagePreview.value);
+  imageFile.value = null;
+  imagePreview.value = null;
+};
+
+const uploadImage = async (file: File): Promise<string> => {
+  const ext = file.name.split(".").pop();
+  const path = `${user.value?.id ?? "anon"}/${crypto.randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("product-images")
+    .upload(path, file, { contentType: file.type, upsert: false });
+
+  if (error) throw error;
+
+  const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+  return data.publicUrl;
+};
+
+onBeforeUnmount(() => {
+  if (imagePreview.value) URL.revokeObjectURL(imagePreview.value);
+});
+
+// ---------- Load dropdown data ----------
 onMounted(async () => {
   try {
-    // 1. Fetch categories and suppliers concurrently
     const [catRes, supRes] = await Promise.all([
       supabase
         .from("categories")
         .select("id, name")
         .order("name", { ascending: true }),
-
-      // regardless of lowercase/uppercase mismatches or empty values
       supabase
         .from("suppliers")
         .select("id, supplier_name")
         .order("supplier_name", { ascending: true }),
     ]);
 
-    // 2. Map the data safely if the response is successful
     if (catRes.data) {
       categoriesList.value = catRes.data;
     }
 
     if (supRes.data) {
       suppliersList.value = supRes.data;
-      console.log(
-        "Suppliers successfully loaded into form dropdown:",
-        supRes.data
-      );
     }
 
-    // 3. Optional Debug log: Checks if Supabase is rejecting your query due to RLS policies
     if (supRes.error) {
       console.error("Supabase Suppliers Fetch Error:", supRes.error.message);
     }
@@ -305,14 +393,17 @@ onMounted(async () => {
   }
 });
 
+// ---------- Submit ----------
 const handleSubmit = async () => {
   try {
     submitting.value = true;
 
-    // Default image value if string input stays empty
-    const imagePath = form.value.image_url.trim() || "https://unsplash.com";
+    // Upload dropped image (if any), otherwise use placeholder
+    const imagePath = imageFile.value
+      ? await uploadImage(imageFile.value)
+      : DEFAULT_IMAGE;
 
-    // 4. PHASE 1: Write cleanly into your master private inventory products table including category & supplier
+    // PHASE 1: Insert into private inventory products table
     const { data: productData, error: productError } = await supabase
       .from("products")
       .insert([
@@ -324,7 +415,6 @@ const handleSubmit = async () => {
           quantity: form.value.quantity,
           description: form.value.description,
           image_url: imagePath,
-
           status:
             form.value.quantity >= 8
               ? "instock"
@@ -338,14 +428,14 @@ const handleSubmit = async () => {
 
     if (productError) throw productError;
 
-    // 5. PHASE 2: Check if user requested a marketplace public offer broadcast
+    // PHASE 2: Marketplace listing, if requested
     if (form.value.list_externally && productData) {
       const { error: marketError } = await supabase
         .from("marketplace_listings")
         .insert([
           {
             internal_product_id: productData.id,
-            category_id: form.value.category_id, // Attaches category to marketplace as well
+            category_id: form.value.category_id,
             title: ` ${form.value.name}`,
             price: form.value.wholesale_price,
             quantity_available: form.value.wholesale_qty,
@@ -359,24 +449,23 @@ const handleSubmit = async () => {
       if (marketError) throw marketError;
     }
 
-    // 6. FIXED: Triggers parent data listeners to update and closes modal safely
     toast.success("Product successfully added to inventory!");
     emits("refetch");
     emits("cancel");
 
-    // Reset fields cleanly
+    // Reset fields
     form.value = {
       name: "",
       category_id: "",
       supplier_id: "",
       price: 0,
       quantity: 0,
-      image_url: "",
       description: "",
       list_externally: false,
       wholesale_price: 0,
       wholesale_qty: 0,
     };
+    clearImage();
   } catch (err: any) {
     alert("Submission Error: " + err.message);
   } finally {

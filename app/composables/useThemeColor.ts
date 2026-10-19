@@ -17,10 +17,35 @@ export const themeColors = [
   { name: "slate", label: "Slate", swatch: "oklch(0.45 0.03 250)" },
 ] as const;
 
+export const themeFonts = [
+  { name: "inter", label: "Inter", family: "'Inter', sans-serif" },
+  { name: "poppins", label: "Poppins", family: "'Poppins', sans-serif" },
+  { name: "dm-sans", label: "DM Sans", family: "'DM Sans', sans-serif" },
+  { name: "nunito", label: "Nunito", family: "'Nunito', sans-serif" },
+  { name: "manrope", label: "Manrope", family: "'Manrope', sans-serif" },
+  {
+    name: "space-grotesk",
+    label: "Space Grotesk",
+    family: "'Space Grotesk', sans-serif",
+  },
+  {
+    name: "playfair",
+    label: "Playfair Display",
+    family: "'Playfair Display', serif",
+  },
+  {
+    name: "mono",
+    label: "JetBrains Mono",
+    family: "'JetBrains Mono', monospace",
+  },
+] as const;
+
 export type ThemeColorName = (typeof themeColors)[number]["name"];
+export type ThemeFontName = (typeof themeFonts)[number]["name"];
 
 export const useThemeColor = () => {
   const themeColor = useState<ThemeColorName>("theme-color", () => "zinc");
+  const themeFont = useState<ThemeFontName>("theme-font", () => "inter");
 
   const applyThemeColor = (name: ThemeColorName) => {
     if (!import.meta.client) return;
@@ -31,11 +56,35 @@ export const useThemeColor = () => {
     themeColor.value = name;
   };
 
-  const initThemeColor = () => {
+  const applyThemeFont = (name: ThemeFontName) => {
     if (!import.meta.client) return;
-    const saved = localStorage.getItem("theme-color") as ThemeColorName | null;
-    if (saved) applyThemeColor(saved);
+    const root = document.documentElement;
+    themeFonts.forEach((f) => root.classList.remove(`ff-${f.name}`));
+    root.classList.add(`ff-${name}`);
+    localStorage.setItem("theme-font", name);
+    themeFont.value = name;
   };
 
-  return { themeColor, themeColors, applyThemeColor, initThemeColor };
+  const initThemeColor = () => {
+    if (!import.meta.client) return;
+    const savedColor = localStorage.getItem(
+      "theme-color"
+    ) as ThemeColorName | null;
+    if (savedColor) applyThemeColor(savedColor);
+
+    const savedFont = localStorage.getItem(
+      "theme-font"
+    ) as ThemeFontName | null;
+    applyThemeFont(savedFont || "inter");
+  };
+
+  return {
+    themeColor,
+    themeColors,
+    applyThemeColor,
+    themeFont,
+    themeFonts,
+    applyThemeFont,
+    initThemeColor,
+  };
 };

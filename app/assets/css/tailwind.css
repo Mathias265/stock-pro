@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
@@ -9,7 +9,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: 'Inter Variable', sans-serif;
+  --font-sans: var(--app-font, 'Inter', sans-serif);
     --font-heading: var(--font-sans);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -117,10 +117,59 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* =====================================================
+   Theme backgrounds (shared) — tinted by each theme's --h
+   Adjust the chroma (2nd number) to make tint stronger/weaker
+   ===================================================== */
+[class*="theme-"] {
+  --background: oklch(0.982 0.014 var(--h));
+  --foreground: oklch(0.145 0.015 var(--h));
+  --card: oklch(0.995 0.008 var(--h));
+  --card-foreground: oklch(0.145 0.015 var(--h));
+  --popover: oklch(0.995 0.008 var(--h));
+  --popover-foreground: oklch(0.145 0.015 var(--h));
+  --secondary: oklch(0.955 0.022 var(--h));
+  --secondary-foreground: oklch(0.22 0.03 var(--h));
+  --muted: oklch(0.955 0.022 var(--h));
+  --muted-foreground: oklch(0.5 0.03 var(--h));
+  --accent: oklch(0.945 0.028 var(--h));
+  --accent-foreground: oklch(0.22 0.03 var(--h));
+  --border: oklch(0.905 0.025 var(--h));
+  --input: oklch(0.905 0.025 var(--h));
+  --sidebar: oklch(0.968 0.02 var(--h));
+  --sidebar-foreground: oklch(0.145 0.015 var(--h));
+  --sidebar-accent: oklch(0.94 0.03 var(--h));
+  --sidebar-accent-foreground: oklch(0.22 0.03 var(--h));
+  --sidebar-border: oklch(0.905 0.025 var(--h));
+}
+
+.dark[class*="theme-"] {
+  --background: oklch(0.15 0.022 var(--h));
+  --foreground: oklch(0.985 0.005 var(--h));
+  --card: oklch(0.2 0.028 var(--h));
+  --card-foreground: oklch(0.985 0.005 var(--h));
+  --popover: oklch(0.2 0.028 var(--h));
+  --popover-foreground: oklch(0.985 0.005 var(--h));
+  --secondary: oklch(0.27 0.035 var(--h));
+  --secondary-foreground: oklch(0.985 0.005 var(--h));
+  --muted: oklch(0.27 0.035 var(--h));
+  --muted-foreground: oklch(0.72 0.035 var(--h));
+  --accent: oklch(0.29 0.04 var(--h));
+  --accent-foreground: oklch(0.985 0.005 var(--h));
+  --border: oklch(0.55 0.06 var(--h) / 25%);
+  --input: oklch(0.55 0.06 var(--h) / 32%);
+  --sidebar: oklch(0.185 0.028 var(--h));
+  --sidebar-foreground: oklch(0.985 0.005 var(--h));
+  --sidebar-accent: oklch(0.27 0.035 var(--h));
+  --sidebar-accent-foreground: oklch(0.985 0.005 var(--h));
+  --sidebar-border: oklch(0.55 0.06 var(--h) / 25%);
+}
+
 /* === Color Themes === */
 /* Default is your existing :root (zinc/neutral) */
 
 .theme-red {
+  --h: 27;
   --primary: oklch(0.577 0.245 27.325);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.577 0.245 27.325);
@@ -149,6 +198,7 @@
 }
 
 .theme-orange {
+  --h: 48;
   --primary: oklch(0.705 0.191 48);
   --primary-foreground: oklch(0.145 0 0);
   --ring: oklch(0.705 0.191 48);
@@ -177,6 +227,7 @@
 }
 
 .theme-amber {
+  --h: 70;
   --primary: oklch(0.72 0.16 70);
   --primary-foreground: oklch(0.145 0 0);
   --ring: oklch(0.72 0.16 70);
@@ -205,6 +256,7 @@
 }
 
 .theme-yellow {
+  --h: 95;
   --primary: oklch(0.8 0.18 95);
   --primary-foreground: oklch(0.145 0 0);
   --ring: oklch(0.8 0.18 95);
@@ -233,6 +285,7 @@
 }
 
 .theme-lime {
+  --h: 128;
   --primary: oklch(0.75 0.19 128);
   --primary-foreground: oklch(0.145 0 0);
   --ring: oklch(0.75 0.19 128);
@@ -261,6 +314,7 @@
 }
 
 .theme-green {
+  --h: 145;
   --primary: oklch(0.6 0.15 145);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.6 0.15 145);
@@ -289,6 +343,7 @@
 }
 
 .theme-emerald {
+  --h: 165;
   --primary: oklch(0.6 0.14 165);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.6 0.14 165);
@@ -317,6 +372,7 @@
 }
 
 .theme-teal {
+  --h: 195;
   --primary: oklch(0.6 0.12 195);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.6 0.12 195);
@@ -345,6 +401,7 @@
 }
 
 .theme-cyan {
+  --h: 220;
   --primary: oklch(0.62 0.13 220);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.62 0.13 220);
@@ -373,6 +430,7 @@
 }
 
 .theme-blue {
+  --h: 260;
   --primary: oklch(0.55 0.2 260);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.55 0.2 260);
@@ -401,6 +459,7 @@
 }
 
 .theme-indigo {
+  --h: 275;
   --primary: oklch(0.5 0.22 275);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.5 0.22 275);
@@ -429,6 +488,7 @@
 }
 
 .theme-violet {
+  --h: 295;
   --primary: oklch(0.55 0.25 295);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.55 0.25 295);
@@ -457,6 +517,7 @@
 }
 
 .theme-pink {
+  --h: 355;
   --primary: oklch(0.62 0.22 355);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.62 0.22 355);
@@ -485,6 +546,7 @@
 }
 
 .theme-rose {
+  --h: 15;
   --primary: oklch(0.6 0.22 15);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.6 0.22 15);
@@ -513,6 +575,7 @@
 }
 
 .theme-slate {
+  --h: 250;
   --primary: oklch(0.45 0.03 250);
   --primary-foreground: oklch(0.985 0 0);
   --ring: oklch(0.45 0.03 250);
@@ -538,7 +601,15 @@
   --chart-4: oklch(0.68 0.13 30);
   --chart-5: oklch(0.55 0.02 250);
 }
-
+/* === Font Themes === */
+.ff-inter { --app-font: 'Inter', sans-serif; }
+.ff-poppins { --app-font: 'Poppins', sans-serif; }
+.ff-dm-sans { --app-font: 'DM Sans', sans-serif; }
+.ff-nunito { --app-font: 'Nunito', sans-serif; }
+.ff-manrope { --app-font: 'Manrope', sans-serif; }
+.ff-space-grotesk { --app-font: 'Space Grotesk', sans-serif; }
+.ff-playfair { --app-font: 'Playfair Display', serif; }
+.ff-mono { --app-font: 'JetBrains Mono', monospace; }
 @layer base {
   * {
     @apply border-border outline-ring/50;
